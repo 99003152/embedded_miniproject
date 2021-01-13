@@ -18,18 +18,9 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <string.h>
-#include <stdlib.h>
+
 #include "main.h"
-#include "DHT11.h"
 
-struct dht11Variables
-{
-	volatile uint8_t humidity_byte1, humidity_byte2, temperature_byte1, temperature_byte2, response;
-	volatile uint16_t parity, humidity_RAW, temperature_RAW;
-	volatile int TEMPERATURE, HUMIDITY;
-
-}dhtsensorvar;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -106,36 +97,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if((HAL_GPIO_ReadPin(gpio_input_GPIO_Port, GPIO_PIN_1)) == 1)
-	  	  {
-	  		  HAL_GPIO_TogglePin(blue_GPIO_Port,GPIO_PIN_15);
-	  		  HAL_Delay(100);
-	  	  }
-	  	  else
-	  	  {
-	  		  HAL_GPIO_TogglePin(red_GPIO_Port,GPIO_PIN_14);
-	  		  HAL_Delay(100);
-	  	  }
-	  //HAL_GPIO_TogglePin(led_blue_GPIO_Port, led_blue_Pin);
-	  		  DHT11_Strt();
-	  		  dhtsensorvar.response = DHT11_Check_Resp();
-	  		  HAL_GPIO_WritePin(slave_sel_GPIO_Port, GPIO_PIN_4, DISABLE);
-	  		  if (dhtsensorvar.response == 1)
-	  		  {
-	  			  dhtsensorvar.humidity_byte1 = DHT11_read();
-	  			  dhtsensorvar.humidity_byte2 = DHT11_read();
-	  			  dhtsensorvar.temperature_byte1 = DHT11_read();
-	  			  dhtsensorvar.temperature_byte2 = DHT11_read();
-	  			  dhtsensorvar.parity = DHT11_read();
-	  			  dhtsensorvar.humidity_RAW = dhtsensorvar.humidity_byte1;
-	  			  dhtsensorvar.temperature_RAW = dhtsensorvar.temperature_byte1;
-	  			  dhtsensorvar.TEMPERATURE = (int)dhtsensorvar.temperature_RAW;
-	  			  dhtsensorvar.HUMIDITY = (int)dhtsensorvar.humidity_RAW;
-	  			  //uint8_t temp1 = (uint8_t)dhtsensorvar.HUMIDITY;
-	  			  uint8_t temp2 = (uint8_t)dhtsensorvar.TEMPERATURE;   //I'm only sending the humidity data, so temperature is unused.
-	  			  HAL_SPI_Transmit(&hspi1, &temp2, 1, 10);
-	  			  HAL_Delay(100);
-	  		  }
+	 temp = HAL_GPIO_ReadPin(gpio_ip_GPIO_Port, GPIO_PIN_1);
+	  	  	  if((HAL_GPIO_ReadPin(gpio_ip_GPIO_Port, GPIO_PIN_1)) == 1)
+	  	  	  	  {
+	  	  	  	  	  HAL_GPIO_TogglePin(blue_GPIO_Port,GPIO_PIN_15);
+	  	  	  	  	  HAL_Delay(100);
+	  	  	  	  }
+	  	  	  else
+	  	  	  {
+	  	  	  	  HAL_GPIO_TogglePin(red_GPIO_Port,GPIO_PIN_14);
+	  	  	  	  HAL_Delay(100);
+	  	  	  }
+	  	  	  HAL_SPI_Transmit(&hspi1, &temperature, 10, 100);
+	  	  	  HAL_Delay(1000);
+ }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
